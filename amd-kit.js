@@ -92,6 +92,7 @@ if (!Array.prototype.indexOf) {
 				results.push(this._modules[modReqs[i]].value);
 			}
 		}
+		results.reverse();
 		return results;
 	};
 	ModulesList.prototype.execute = function(module) {
