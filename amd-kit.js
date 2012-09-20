@@ -89,10 +89,9 @@ if (!Array.prototype.indexOf) {
 			if (modReqs[i] in this._modules && this._modules[modReqs[i]].executed !== true) {
 				return false;
 			} else if (modReqs[i] in this._modules) {
-				results.push(this._modules[modReqs[i]].value);
+				results.unshift(this._modules[modReqs[i]].value);
 			}
 		}
-		results.reverse();
 		return results;
 	};
 	ModulesList.prototype.execute = function(module) {
