@@ -1,41 +1,12 @@
 /**
- * Array.indexOf Polyfill (courtesy of MDN)
+ * Create the AMD-Kit Handler
  */
-if (!Array.prototype.indexOf) {
-	Array.prototype.indexOf = function(searchElement /*, fromIndex */ ) {
-		if (this === null) {
-			throw new TypeError();
-		}
-		var t = new Object(this);
-		var len = t.length >>> 0;
-		if (len === 0) {
-			return -1;
-		}
-		var n = 0;
-		if (arguments.length > 0) {
-			n = Number(arguments[1]);
-			if (n != n) { // shortcut for verifying if it's NaN
-				n = 0;
-			} else if (n !== 0 && n != Infinity && n != -Infinity) {
-				n = (n > 0 || -1) * Math.floor(Math.abs(n));
-			}
-		}
-		if (n >= len) {
-			return -1;
-		}
-		var k = n >= 0 ? n : Math.max(len - Math.abs(n), 0);
-		for (; k < len; k++) {
-			if (k in t && t[k] === searchElement) {
-				return k;
-			}
-		}
-		return -1;
-	};
-}
-
 (function(window, document){
 	var buildFile,
 		Modules = new ModulesList();
+
+	// Array.indexOf Polyfill (courtesy of MDN)
+	if(!Array.prototype.indexOf){Array.prototype.indexOf=function(a){if(this===null){throw new TypeError}var b=new Object(this);var c=b.length>>>0;if(c===0){return-1}var d=0;if(arguments.length>0){d=Number(arguments[1]);if(d!=d){d=0}else if(d!==0&&d!=Infinity&&d!=-Infinity){d=(d>0||-1)*Math.floor(Math.abs(d))}}if(d>=c){return-1}var e=d>=0?d:Math.max(c-Math.abs(d),0);for(;e<c;e++){if(e in b&&b[e]===a){return e}}return-1}}
 
 /**
  * ModulesList (Constructor)
