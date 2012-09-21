@@ -73,7 +73,7 @@ if (!Array.prototype.indexOf) {
 			if (this._reqs[reqs[i]].indexOf(module) === -1) this._reqs[reqs[i]].push(module);
 		}
 
-		this.execute(module);
+		if (typeof callback === 'function') this.execute(module);
 
 		function executor(module) {
 			return function() {self.execute(module);};
@@ -170,5 +170,21 @@ if (!Array.prototype.indexOf) {
 	window.define = function() {
 		Modules.add.apply(Modules, arguments);
 	};
+
+/**
+ * domReady requirement definition
+ * add 'domReady' requirement to only fire after DOM is ready
+ */
+	Modules.add('domReady');
+	var domReady = function() {
+		Modules.execute('domReady');
+	};	
+	if (document.addEventListener) {
+		document.addEventListener('DOMContentLoaded', domReady, false);
+		window.addEventListener('load', domReady, false);
+	} else {
+		document.attachEvent('onreadystatechange', domReady);
+		window.attachEvent('onload', domReady);
+	}
 
 }(window, document));
