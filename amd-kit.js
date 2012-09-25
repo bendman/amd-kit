@@ -24,7 +24,8 @@
 
 		if (typeof reqs === 'string') reqs = [reqs];
 		if (!(reqs instanceof Array)) reqs = [];
-		if (module in this._modules && 'executed' in this._modules[module]) return false;
+		if (module in this._modules && 'executed' in this._modules[module])
+			return false;
 
 		if (module === undefined) {
 			module = 'Require_' + this._requires++;
@@ -41,7 +42,8 @@
 		while (i--) {
 			this._reqs[reqs[i]] = this._reqs[reqs[i]] || [];
 			this.include(reqs[i], executor(reqs[i]));
-			if (this._reqs[reqs[i]].indexOf(module) === -1) this._reqs[reqs[i]].push(module);
+			if (this._reqs[reqs[i]].indexOf(module) === -1)
+				this._reqs[reqs[i]].push(module);
 		}
 
 		if (typeof callback === 'function') this.execute(module);
@@ -52,15 +54,15 @@
 	};
 	ModulesList.prototype.getRequirements = function(module) {
 		var results = [],
-			result,
-			modReqs = this._modules[module].requirements || [],
-			i = modReqs.length;
+			mods = this._modules,
+			reqs = mods[module].requirements || [],
+			i = reqs.length;
 
 		while (i--) {
-			if (modReqs[i] in this._modules && this._modules[modReqs[i]].executed !== true) {
+			if (reqs[i] in mods && mods[reqs[i]].executed !== true) {
 				return false;
-			} else if (modReqs[i] in this._modules) {
-				results.unshift(this._modules[modReqs[i]].value);
+			} else if (reqs[i] in mods) {
+				results.unshift(mods[reqs[i]].value);
 			}
 		}
 		return results;
@@ -90,20 +92,21 @@
 			Modules = this;
 
 		//for not duplicating script tags
-		if (typeof this._modules[module] === 'object' && !this._modules[module].script) return true;
+		if (typeof this._modules[module] === 'object') return true;
 		this._modules[module] = {};
 
 		script.type = 'text/javascript';
 		script.async = true;
 		script.onreadystatechange = script.onload = function(e) {
-			if (!loaded && (!this.readyState || this.readyState === 'complete' || this.readyState === 'loaded')) {
+			var state = this.readyState;
+			if (!loaded && (!state || state === 'complete' || state === 'loaded')) {
 				this.onreadystatechange = null;
 				loaded = 1;
 				executor();
 			}
 		};
 		script.src = module;
-		this._modules[module].script = firstScript.parentNode.insertBefore(script, firstScript);
+		firstScript.parentNode.insertBefore(script, firstScript);
 	};
 
 /**
